@@ -1,0 +1,585 @@
+<!DOCTYPE html>
+<html lang="en">
+{% load static %}
+{% load leaflet_tags %}
+<head>
+    {% leaflet_js %}
+    {% leaflet_css %}
+    <meta charset="UTF-8">
+    <title>Big Data Studio Kota Manado</title>
+    {% include "styleindex.html" %}
+    <link rel="stylesheet" type="text/css" href="{% static 'custom/index.css' %}"> 
+    <link rel="stylesheet" type="text/css" href="{% static 'bootstrap/bootstrap.min.css' %}"> 
+    <link rel="stylesheet" type="text/css" href="{% static 'leafletlayercontrol/leaflet.groupedlayercontrol.min.css' %}">
+    <link rel="stylesheet" type="text/css" href="{% static 'mousecoordinat/Leaflet.Coordinates-0.1.5.css' %}">
+    <link rel="stylesheet" type="text/css" href="https://ppete2.github.io/Leaflet.PolylineMeasure/Leaflet.PolylineMeasure.css" />
+    <link rel="stylesheet" type="text/css" href="{% static 'liveupdate/leaflet-liveupdate.css' %}">
+    <link rel="stylesheet" type="text/css" href="{% static 'leafletlayerpanel/leaflet-panel-layers.src.css' %}">
+    <link rel="stylesheet" type="text/css" href="{% static 'leafletzoombar/L.Control.ZoomBar.css' %}">
+
+    <link rel="stylesheet" type="text/css" href="{% static 'vjs.zencdn.net/4.11/video-js.css' %}">
+    <script type="text/javascript" src="{% static 'vjs.zencdn.net/4.11/video.js' %}"></script>
+	
+	<link rel="stylesheet" type="text/css" href="https://fonts.googleapis.com/css?family=Roboto">
+
+    <script type="text/javascript" src="{% static 'jquery/jquery-1.10.2.min.js' %}"></script>
+    <script type="text/javascript" src="{% static 'bootstrap/bootstrap.min.js' %}"></script>
+    {# <script type="text/javascript" src="http://cdnjs.cloudflare.com/ajax/libs/jquery/1.10.2/jquery.min.map"></script> #}
+	
+	{# <script type="text/javascript" src="http://cdnjs.cloudflare.com/ajax/libs/leaflet/0.7.3/leaflet.js"></script> #}
+    <script type="text/javascript" src="{% static 'leafajax/leaflet.ajax.js' %}"></script>
+    <script type="text/javascript" src="{% static 'leafletlayercontrol/leaflet.groupedlayercontrol.min.js' %}"></script>
+    <script type="text/javascript" src="{% static 'leafletproviders/leaflet-providers.js' %}"></script>
+    <script type="text/javascript" src="{% static 'mousecoordinat/Leaflet.Coordinates-0.1.5.min.js' %}"></script>
+    <script type="text/javascript" src="{% static 'leaflet/PolylineMeasure.js' %}"></script>
+    <script type="text/javascript" src="{% static 'liveupdate/leaflet-liveupdate.js' %}"></script>
+    <script type="text/javascript" src="{% static 'leafletlayerpanel/leaflet-panel-layers.src.js' %}"></script>
+    <script type="text/javascript" src="{% static 'leafletzoombar/L.Control.ZoomBar.js' %}"></script>
+	
+</head>
+<body>
+<marquee id="hd" style="font-size:30px; background:lightblue;">Big Data Studio Kota Manado</marquee>
+<img id="header" src="">
+
+<div id="toolbar">
+	<div class="hamburger">
+		<span>Board&nbsp;Info</span>
+	</div>
+	
+	<div id="bnba"></div>
+	
+	<div id="graph"></div>
+	
+	<div id="legend"></div>
+</div>
+
+<div class="modal fade" id="imagemodal" tabindex="-1" role="dialog" aria-labelledby="myModalLabel" aria-hidden="true">
+  <div class="modal-dialog">
+    <div class="modal-content">
+      <div class="modal-header">
+        <button type="button" class="close" data-dismiss="modal"><span aria-hidden="true">&times;</span><span class="sr-only">Close</span></button>
+        <h4 class="modal-title" id="myModalLabel">Image preview</h4>
+      </div>
+      <div class="modal-body">
+        <img src="" id="imagepreview" style="width: 400px; height: 264px;" >
+      </div>
+      <div class="modal-footer">
+        <button type="button" class="btn btn-default" data-dismiss="modal">Close</button>
+      </div>
+    </div>
+  </div>
+</div>
+
+<script type="text/javascript" src="{% static 'custom/index.min.js' %}"></script>
+<script type="text/javascript">
+
+    function out_layers(map,options){
+        var datasets_patchsulut = new L.GeoJSON.AJAX("{% url 'patchsulut' %}",{
+            style: function colors(feature){
+                switch(feature.properties.toponym){
+                    case 'Daratan':
+                        return {
+                            color: "#818181",
+                            fillOpacity: 1,
+                            weight: 0.1,
+                        };
+                    case 'Laut':
+                        return {
+                            color: "#7ab7cd",
+                            fillOpacity: 1,
+                            weight: 0.1,
+                        };
+                }
+            },
+        });
+        datasets_patchsulut.addTo(map);
+
+        var osm = L.tileLayer.provider('OpenStreetMap.Mapnik');
+        var polos =  L.tileLayer('https://tile.jawg.io/light/{z}/{x}/{y}.png?api-key=community');
+        // var polos =  L.tileLayer('http://mt0.google.com/vt/lyrs=m&hl=en&x={x}&y={y}&z={z}&s=');
+        var imagery = L.tileLayer.provider('Esri.WorldImagery'),
+            bapelitbang = L.tileLayer(urltiles+'{z}/{x}/{y}.png');
+
+		
+
+
+        var datasets_lapangan = new L.GeoJSON.AJAX("{% url 'lapangan' %}",{
+            style: function colors(feature){
+                switch(feature.properties.wajibpajak){
+                    case 'unidentified':
+                        return {
+                            color:'orange',
+                            fillOpacity: 0.8,
+                            weight: 0.5,
+                        };
+                    break;
+
+                }
+            },
+            onEachFeature:function(feature,layer){
+                layer.bindPopup(
+                   '<div class="col-md-4" style="overflow-y:auto; height:200px;"><table class="table table-bordered"><tbody><tr><td style="width:170px;"><div class="pasfoto"><img style="height : 100px; width : 100%;	" src="https://i.pinimg.com/originals/11/c9/99/11c9992dda4c5305ad9ba10c9419435c.jpg"></div></div></td><td class="text-left"><table class="table table-bordered"><tr><td class="text-right">No_Rumah:</td><td class="text-left"></td></tr><tr><td class="text-right">No_Provinsi:</td><td class="text-left"></td></tr></table></td></tr><tr><tr><td class="text-right">No_Kota:</td><td class="text-left"></td></tr><tr><td class="text-right">No_Kecamatan:</td><td class="text-left"></td></tr><tr><td class="text-right">No_Kelurahan:</td><td class="text-left"></td></tr><tr><td class="text-right">No_Lingkungan:</td><td class="text-left"></td></tr><tr><td class="text-right">Sertifikat:</td><td class="text-left"></td></tr><tr><td class="text-right">Nama:</td><td class="text-left"></td></tr><tr><td class="text-right">NOP:</td><td class="text-left"></td></tr><tr><td class="text-right">Alamat:</td><td class="text-left"></td></tr><tr><td class="text-right">Fungsi_Bangunan:</td><td class="text-left"></td></tr><tr><td class="text-right">Konstruksi:</td><td class="text-left"></td></tr><tr><td class="text-right">Jumlah_Lantai:</td><td class="text-left"></td></tr><tr><td class="text-right">Luas_Bangunan:</td><td class="text-left"></td></tr><tr><td class="text-right">NJOP:</td><td class="text-left"></td></tr><tr><td class="text-right">Luas_Bumi:</td><td class="text-left"></td></tr><tr><td class="text-right">NJOP_1:</td><td class="text-left"></td></tr><tr><td class="text-right">Nilai_Bangunan:</td><td class="text-left"></td></tr><tr><td class="text-right">Pajak_Terhutang:</td><td class="text-left"></td></tr><tr><td class="text-right">NJOP_2:</td><td class="text-left"></td></tr><tr><td class="text-right">Ketetapan_PBB:</td><td class="text-left"></td></tr><tr><td class="text-right">NIK:</td><td class="text-left"></td></tr><tr><td class="text-right">Nama_NIK:</td><td class="text-left"></td></tr><tr><td class="text-right">Keterangan:</td><td class="text-left"></td></tr></tr></tbody></table></div>'
+                );
+            }
+        });
+
+        var datasets_umum = new L.GeoJSON.AJAX("{% url 'umum' %}",{
+            style:{
+                "color": "#ff0000",
+                "weight": 0.9,
+                "opacity": 0.65,
+                "dashArray": 3,
+                "fillOpacity": 0,
+            },
+            onEachFeature:function(feature,layer){
+                layer.bindPopup('<center>' +feature.properties.lingkungan.toString());
+            }
+        });
+
+        var datasets_incidences = new L.GeoJSON.AJAX("{% url 'incidences' %}",{
+
+        });
+
+        var datasets_trterminal = new L.GeoJSON.AJAX("{% url 'trterminal' %}",{
+             onEachFeature:function(feature,layer){
+                layer.bindPopup(
+                   '<center>'+feature.properties.nama_obyek.toString()+'</center>'
+                );
+            }
+        });
+
+        var datasets_trlampu = new L.GeoJSON.AJAX("{% url 'trlampu' %}",{
+
+        });
+
+        var datasets_trjembatan = new L.GeoJSON.AJAX("{% url 'trjembatan' %}",{
+             onEachFeature:function(feature,layer){
+                layer.bindPopup(
+                   '<center>'+feature.properties.name.toString()+'</center>'
+                );
+            }
+        });
+
+        var datasets_trtrayek = new L.GeoJSON.AJAX("{% url 'trtrayek' %}",{
+             onEachFeature:function(feature,layer){
+                layer.bindPopup(
+                   '<center>'+feature.properties.nama_traye.toString()+'</center>'
+                );
+            }
+        });
+		
+        var datasets_telekomunikasi = new L.GeoJSON.AJAX("{% url 'telekomunikasi' %}",{
+			pointToLayer: function(feature, latlng) {
+                var myIcon = getIconTelekomunikasi(feature);
+				return L.marker(latlng, {icon: myIcon});
+            },
+             onEachFeature:function(feature,layer){
+                layer.bindPopup(
+                   '<center>'+feature.properties.menara.toString()+'</center>'
+                );
+            }
+        });
+
+        var datasets_cctv = new L.GeoJSON.AJAX("{% url 'cctv' %}",{
+             onEachFeature:function(feature,layer){
+
+				var popup = '<div class="pb-video">';
+				popup += '<video class="video-js vjs-default-skin pb-video-frame" poster="http://vjs.zencdn.net/v/oceans.png" controls preload="auto" width="250px" height="250px" data-setup="{}">';
+				
+				popup += '<source src="';
+				
+				if (feature.properties.lokasi == "Jl. 17 Agustus No. 7 Teling Atas Wanea"){
+					popup += '';
+				}
+				
+				popup += '" type="rtmp/mp4">';
+				popup += '</video><label class="form-control text-center" style="font-size:10px;">'+feature.properties.lokasi+'</label></div>';
+
+                layer.bindPopup(
+                   popup
+                );
+            }
+        });
+		
+        var datasets_swalayan = new L.GeoJSON.AJAX("{% url 'swalayan' %}",{
+			pointToLayer: function(feature, latlng) {
+                var myIcon = getIconSwalayan(feature);
+				return L.marker(latlng, {icon: myIcon});
+            },
+            onEachFeature:function(feature,layer){
+                layer.bindPopup(
+                   '<center>'+feature.properties.nama.toString()+'</center>'
+                );
+            }
+        });
+		
+
+        var datasets_sanitasi = new L.GeoJSON.AJAX("{% url 'sanitasi' %}",{
+            style: function colors(feature){
+                switch(feature.properties.keterangan){
+                    case 'MCK KOMUNAL':
+                        return {
+                            color: "#a93226",
+                            fillOpacity: 1,
+                            weight: 0.1,
+                        };
+                    case 'IPAL KOMUNAL':
+                        return {
+                            color: "#884ea0",
+                            fillOpacity: 1,
+                            weight: 0.1,
+                        };
+                    case 'TPSS':
+                        return {
+                            color: "#2471a3",
+                            fillOpacity: 1,
+                            weight: 0.1,
+                        };
+                    case 'MCK IPAL KOMUNAL':
+                        return {
+                            color: "#17a589",
+                            fillOpacity: 1,
+                            weight: 0.1,
+                        };
+                }
+            },
+            onEachFeature:function(feature,layer){
+                layer.bindPopup(
+                   '<center>'+feature.properties.keterangan.toString()+'</center>'
+                );
+            }
+        });
+
+
+
+		var baseLayers = [
+			{
+				group: "Peta Dasar",
+				collapsed: true,
+				layers: [
+					{
+					  name: "Open Street Map",
+					  layer: osm
+					},
+					{
+					  name: "OSM-Polos",
+					  layer: polos
+					},
+					{
+					  name: "Esri Imagery",
+					  layer: imagery
+					},
+					{
+					  name: "Citra 1:5000",
+					  layer: bapelitbang
+					}
+				]
+			},
+
+		];
+
+		var overLayers = [
+			{
+				group: "Administrasi",
+				collapsed: true,
+				layers: [
+					{
+						active: false,
+						name: "Batas Lingkungan",
+						layer: datasets_umum
+					},
+				]
+			},
+			{
+				group: "Umum",
+				collapsed: true,
+				layers: [
+					{
+						active: false,
+						name: "Swalayan",
+						layer: datasets_swalayan
+					},
+				]
+			},
+			{
+				group: "Transportasi",
+				collapsed: true,
+				layers: [
+					{
+						active: false,
+						name: "Terminal",
+						layer: datasets_trterminal
+					},
+					{
+						active: false,
+						name: "Lampu Lalu Lintas",
+						layer: datasets_trlampu
+					},
+					{
+						active: false,
+						name: "Jembatan",
+						layer: datasets_trjembatan
+					},
+					{
+						active: false,
+						name: "Trayek",
+						layer: datasets_trtrayek
+					},
+				]
+			},
+			{
+				group: "Telekomunikasi",
+				collapsed: true,
+				layers: [
+					{
+						active: false,
+						name: "CCTV",
+						layer: datasets_cctv
+					},
+					{
+						active: false,
+						name: "BTS",
+						layer: datasets_telekomunikasi
+					},
+				]
+			},
+			{
+				group: "Sanitasi",
+				collapsed: true,
+				layers: [
+					{
+						active: false,
+						name: "MCK, IPAL, TPSS",
+						layer: datasets_sanitasi
+					},
+				]
+			},
+			{
+				group: "Peta Tematik",
+				collapsed: true,
+				layers: [
+					{
+						active: true,
+						name: "Isolines",
+						layer: {
+							type: "tileLayer.wms",
+							args: ["https://siat.regione.umbria.it/arcgis/services/public/DBT_05_Orografia/MapServer/WMSServer", {
+									layers: '13',
+									format: 'image/png',
+									transparent: true,
+									//minZoom: 13
+								}
+							]
+						}
+					},
+					{
+						active: true,
+						name: "Streams",
+						layer: {
+							type: "tileLayer.wms",
+							args: ["https://siat.regione.umbria.it/arcgis/services/public/DBT_04_Idrografia/MapServer/WMSServer", {
+									layers: '6',
+									format: 'image/png',
+									transparent: true,
+								}
+							]
+						}
+					}
+				]
+			},
+		];
+
+		
+        var overLayers2 = [
+			{
+				group: "Kecamatan Wenang",
+				collapsed: true,
+				layers: [
+					{
+						active: false,
+						name: "Bumi Beringin",
+						layer: _layer2("{% url 'bnbabmib' %}")
+					},
+					{
+						active: false,
+						name: "Calaca",
+						layer:_layer2("{% url 'bnbacal' %}")
+					},
+					{
+						active: false,
+						name: "Istiqlal",
+						layer:_layer2("{% url 'bnbaistq' %}")
+					},
+					{
+						active: false,
+						name: "Komo Luar",
+						layer: _layer2("{% url 'bnbakl' %}")
+					},
+					{
+						active: false,
+						name: "Lawangirung",
+						layer:_layer2("{% url 'bnbalwng' %}")
+					},
+					{
+						active: false,
+						name: "Mahakeret Barat",
+						layer:_layer2("{% url 'bnbamhkb' %}")
+					},
+					{
+						active: false,
+						name: "Mahakeret Timur",
+						layer:_layer2("{% url 'bnbamhkt' %}")
+					},
+					{
+						active: false,
+						name: "Pinaesaan",
+						layer:_layer2("{% url 'bnbapin' %}")
+					},
+					{
+						active: false,
+						name: "Teling Bawah",
+						layer:_layer2("{% url 'bnbatelb' %}")
+					},
+					{
+						active: false,
+						name: "Tikala Kumaraka",
+						layer:_layer2("{% url 'bnbatklak' %}")
+					},
+					{
+						active: false,
+						name: "Wenang Selatan",
+						layer:_layer2("{% url 'bnbawngsel' %}")
+					},
+					{
+						active: false,
+						name: "Wenang Utara",
+						layer:_layer2("{% url 'bnbawngut' %}")
+					},
+				]
+			},
+			{
+				group: "Kecamatan Sario",
+				collapsed: true,
+				layers: [
+					{
+						active: false,
+						name: "Titiwungen Utara",
+						layer:_layer2("{% url 'bnbatwut' %}")
+					},
+					{
+						active: false,
+						name: "Titiwungen Selatan",
+						layer:_layer2("{% url 'bnbatwsel' %}")
+					},
+					{
+						active: false,
+						name: "Sario",
+						layer:_layer2("{% url 'bnbasario' %}")
+					},
+					{
+						active: false,
+						name: "Sario Utara",
+						layer:_layer2("{% url 'bnbasarut' %}")
+					},
+					{
+						active: false,
+						name: "Sario Tumpaan",
+						layer:_layer2("{% url 'bnbasartum' %}")
+					},
+					{
+						active: false,
+						name: "Sario Kotabaru",
+						layer:_layer2("{% url 'bnbasakobar' %}")
+					},
+					{
+						active: false,
+						name: "Ranotana",
+						layer:_layer2("{% url 'bnbaranotana' %}")
+					},
+				]
+			},
+			{
+				group: "Kecamatan Paal Dua",
+				collapsed: true,
+				layers: [
+				{
+					active: false,
+					name: "Paal Dua",
+					layer:_layer2("{% url 'bnbapaal2' %}")
+				},
+				{
+					active: false,
+					name: "Kairagi Weru",
+					layer:_layer2("{% url 'bnbakrgwr' %}")
+				},
+				{
+					active: false,
+					name: "Perkamil",
+					layer:_layer2("{% url 'bnbaperkamil' %}")
+				},
+				{
+					active: false,
+					name: "Dendengan luar",
+					layer:_layer2("{% url 'bnbadenlu' %}")
+				},
+				{
+					active: false,
+					name: "Malendeng",
+					layer:_layer2("{% url 'bnbamalendeng' %}")
+				},
+				{
+					active: false,
+					name: "Ranomuut",
+					layer:_layer2("{% url 'bnbaranomuut' %}")
+				},
+				]
+			},
+        ];
+
+        map.removeControl(map.zoomControl);
+
+        var panelLayersBNBA = new L.Control.PanelLayers(null, overLayers2, {
+            title: "Data By Name By Address",
+            collapsibleGroups: true,
+            collapsed:true,
+            compact:true,
+        })
+
+        var panelLayers = new L.Control.PanelLayers(baseLayers, overLayers, {
+            collapsibleGroups: true,
+            collapsed:true,
+            compact:true,
+        })
+
+        var zoom_bar = new L.Control.ZoomBar({
+            position: 'topleft'
+        }).addTo(map)
+
+        map.addControl(panelLayers)
+        map.addControl(panelLayersBNBA)
+
+
+
+        L.control.coordinates({
+	        position:"bottomleft",
+			useDMS:true,
+			labelTemplateLat:"N {y}",
+			labelTemplateLng:"E {x}",
+			useLatLngOrder:true
+	    }).addTo(map);
+
+        L.control.polylineMeasure({unit: 'metres'}).addTo(map);
+
+		
+		map.on('overlayadd', onOverlayAdd);
+		function onOverlayAdd(e){
+			// console.log(e);
+		}
+    }
+	
+</script>
+
+
+{% leaflet_map "bdakom" callback="window.out_layers" %}
+</body>
+</html>
