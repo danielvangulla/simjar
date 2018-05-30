@@ -43,7 +43,7 @@
 
 {% include "toolbar.html" %}
 
-<script type="text/javascript" src="{% static 'custom/index.min.js' %}"></script>
+<script type="text/javascript" src="{% static 'custom/index.js' %}"></script>
 <script type="text/javascript">
 
     function out_layers(map,options){
@@ -108,107 +108,6 @@
                 layer.bindPopup('<center>' +feature.properties.lingkungan.toString());
             }
         });
-
-        var datasets_incidences = new L.GeoJSON.AJAX("{% url 'incidences' %}",{
-
-        });
-
-		/*
-        var datasets_trterminal = new L.GeoJSON.AJAX("{% url 'trterminal' %}",{
-             onEachFeature:function(feature,layer){
-                layer.bindPopup(
-                   '<center>'+feature.properties.nama_obyek.toString()+'</center>'
-                );
-            }
-        });
-
-        var datasets_trjembatan = new L.GeoJSON.AJAX("{% url 'trjembatan' %}",{
-             onEachFeature:function(feature,layer){
-                layer.bindPopup(
-                   '<center>'+feature.properties.name.toString()+'</center>'
-                );
-            }
-        });
-
-        var datasets_trtrayek = new L.GeoJSON.AJAX("{% url 'trtrayek' %}",{
-             onEachFeature:function(feature,layer){
-                layer.bindPopup(
-                   '<center>'+feature.properties.nama_traye.toString()+'</center>'
-                );
-            }
-        });
-		
-        var datasets_telekomunikasi = new L.GeoJSON.AJAX("{% url 'telekomunikasi' %}",{
-			pointToLayer: function(feature, latlng) {
-                var myIcon = getIconTelekomunikasi(feature);
-				return L.marker(latlng, {icon: myIcon});
-            },
-             onEachFeature:function(feature,layer){
-                layer.bindPopup(
-                   '<center>'+feature.properties.menara.toString()+'</center>'
-                );
-            }
-        });
-		
-        var datasets_cctv = new L.GeoJSON.AJAX("{% url 'cctv' %}",{
-             onEachFeature:function(feature,layer){
-
-				var popup = '<div class="pb-video">';
-				popup += '<video class="video-js vjs-default-skin pb-video-frame" poster="http://vjs.zencdn.net/v/oceans.png" controls preload="auto" width="250px" height="250px" data-setup="{}">';
-				
-				popup += '<source src="';
-				
-				if (feature.properties.lokasi == "Jl. 17 Agustus No. 7 Teling Atas Wanea"){
-					popup += '';
-				}
-				
-				popup += '" type="rtmp/mp4">';
-				popup += '</video><label class="form-control text-center" style="font-size:10px;">'+feature.properties.lokasi+'</label></div>';
-
-                layer.bindPopup(
-                   popup
-                );
-            }
-        });
-		*/
-		
-
-        var datasets_sanitasi = new L.GeoJSON.AJAX("{% url 'sanitasi' %}",{
-            style: function colors(feature){
-                switch(feature.properties.keterangan){
-                    case 'MCK KOMUNAL':
-                        return {
-                            color: "#a93226",
-                            fillOpacity: 1,
-                            weight: 0.1,
-                        };
-                    case 'IPAL KOMUNAL':
-                        return {
-                            color: "#884ea0",
-                            fillOpacity: 1,
-                            weight: 0.1,
-                        };
-                    case 'TPSS':
-                        return {
-                            color: "#2471a3",
-                            fillOpacity: 1,
-                            weight: 0.1,
-                        };
-                    case 'MCK IPAL KOMUNAL':
-                        return {
-                            color: "#17a589",
-                            fillOpacity: 1,
-                            weight: 0.1,
-                        };
-                }
-            },
-            onEachFeature:function(feature,layer){
-                layer.bindPopup(
-                   '<center>'+feature.properties.keterangan.toString()+'</center>'
-                );
-            }
-        });
-
 
 
 		var baseLayers = [

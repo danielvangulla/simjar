@@ -5,12 +5,6 @@ var urltiles = "http://"+ip[0]+"/dataGIS/Other/Bapelitbang_tiles/";
 
 document.getElementById("header").src = "http://"+ip[0]+"/dataGIS/images/frontend/header.png";
 
-$("#pop").click(function() {
-	alert("test");
-	//$('#imagepreview').attr('src', $('#imageresource').attr('src')); // here asign the image to the modal when the user click the enlarge link
-	//$('#imagemodal').modal('show'); // imagemodal is the id attribute assigned to the bootstrap modal, then i use the show function
-});
-
 function formatRibuan(value) {
 	var val = (value/1).toFixed(0).replace('.', ',')
 	return val.toString().replace(/\B(?=(\d{3})+(?!\d))/g, ".")
@@ -219,9 +213,9 @@ function getPopup(feature,arr)
 	popup	+= '<div class="" style="overflow-y:auto; overflow-x:hidden; height:60vh; width:100%;">';
 	popup	+= '<table class="table table-bordered">';
 	popup	+= '<tbody>';
-	popup	+= '<tr><td class="text-right" style="width:30%;" colspan="2"><a href="#" id="pop">';
+	popup	+= '<tr><td class="text-center" colspan="2"><a href="#">';
 	
-	style	= 'style="height : 170px; width : 100%;"';
+	style	= 'style="height : 170px; width : auto;"';
 	popup	+= '<img id="imageresource" '+style+' src='+getPathFoto(feature)+'/></a></td></tr>';
 	
 	for (var row of arrPopup){
@@ -303,20 +297,43 @@ function _layer1(url)
 	
 	var jenis = _url[0];
 	return (new L.GeoJSON.AJAX(url, {
-			pointToLayer: function(feature, latlng) {
-                var myIcon = getIcon(feature, jenis);
-				return L.marker(latlng, {icon: myIcon});
-            },
-            onEachFeature:function(feature,layer){
-				if (jenis == "swalayan"){
-					layer.bindPopup(
-					   '<center>'+feature.properties.nama.toString()+'</center>'
-					);
-				}
-            }
-        })
-	);
+		pointToLayer: function(feature, latlng) {
+			var myIcon = getIcon(feature, jenis);
+			return L.marker(latlng, {icon: myIcon});
+		},
+		onEachFeature:function(feature,layer){
+			var popup = getLayer1Popup(jenis, feature);
+			if (jenis != "trlampu"){
+				layer.bindPopup(popup);
+			}
+		}
+	}));
 }
+
+
+function getLayer1Popup(jenis, feature)
+{
+	var popup = "";
+	switch(jenis)
+	{
+		case "swalayan"			: popup = '<center>'+feature.properties.nama+'</center>'; break;
+		case "trjembatan"		: popup = '<center>'+feature.properties.name+'</center>'; break;
+		case "trterminal"		: popup = '<center>'+feature.properties.nama_obyek+'</center>'; break;
+		case "trtrayek"			: popup = '<center>'+feature.properties.nama_traye+'</center>'; break;
+		case "telekomunikasi"	: popup = '<center>'+feature.properties.menara+'</center>'; break;
+		case "sanitasi"			: popup = '<center>'+feature.properties.keterangan+'</center>'; break;
+		case "cctv"	:	
+			var popup = '<div class="pb-video">';
+				popup += '<video class="video-js vjs-default-skin pb-video-frame" ';
+				popup += 'poster="http://vjs.zencdn.net/v/oceans.png" controls preload="auto" width="250px" height="250px" data-setup="{}">';
+				popup += '<source src="" type="rtmp/mp4">';
+				popup += '</video><label class="form-control text-center" style="font-size:10px;">'+feature.properties.lokasi+'</label></div>';
+			break;
+	}
+	
+	return popup;
+}
+
 
 // Icon marker
 function getIcon(feature, jenis)
@@ -344,6 +361,23 @@ function getIcon(feature, jenis)
 		case "infralampu" : 
 			_iconUrl += "RoadLight" + feature.properties.keterangan + ".png"; 
 			_shadowUrl += "RoadLightShadow.png";
+			break;
+			
+		case "sanitasi" : 
+			if (feature.properties.keterangan == "TPSS") {
+				_iconUrl += "tpss.png"; 
+			} 
+			else if (feature.properties.keterangan == "MCK KOMUNAL") {
+				_iconUrl += "mck.png"; 
+			} 
+			else if (feature.properties.keterangan == "IPAL KOMUNAL") {
+				_iconUrl += "ipal.png"; 
+			} 
+			else {
+				_iconUrl += "mckipal.png";
+			} 
+			
+			_shadowUrl += "tpssmckipalshadow.png";
 			break;
 			
 		default :
