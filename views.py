@@ -3,7 +3,7 @@ from django.views.generic import TemplateView
 from django.core.serializers import serialize
 from django.http import HttpResponse
 from .models import Bloklapangan, Incindences, Umum, PatchSulut, TrTerminal, TrLampu, TrJembatan, TrTrayek, Telekomunikasi, SmpJalan, \
-    SmpSungai, Sanitasi, Cctv, Swalayan, BnbaKl, BnbaIstq, BnbaMhkt, BnbaTelb, BnbaTklak, BnbaWngsel, BnbaPin, BnbaWngut, BnbaLwng, \
+    SmpSungai, Sanitasi, Cctv, Infralampu, Swalayan, BnbaKl, BnbaIstq, BnbaMhkt, BnbaTelb, BnbaTklak, BnbaWngsel, BnbaPin, BnbaWngut, BnbaLwng, \
     BnbaTwut, BnbaTwsel, BnbaCal, BnbaBmib, BnbaMhkb, BnbaSarUt, BnbaRanotana, BnbaSaKobar, BnbaSario, BnbaSarTum, BnbaKrgwr, BnbaPerkamil, \
     BnbaPaal2, BnbaDenlu, BnbaMalendeng, BnbaRanomuut
 
@@ -168,6 +168,10 @@ def cctv_datasets(request):
 def swalayan_datasets(request):
     swalayan = serialize('geojson', Swalayan.objects.all())
     return HttpResponse(swalayan, content_type='json')
+
+def infralampu_datasets(request):
+    infralampu = serialize('geojson', Infralampu.objects.all())
+    return HttpResponse(infralampu, content_type='json')
 
 def indomaret_datasets(request):
     swalayan = serialize('geojson', Swalayan.objects.values())

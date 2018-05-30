@@ -1,6 +1,6 @@
 from django.contrib.gis import admin
 from .models import Incindences, Bloklapangan, Umum, TrTerminal, TrLampu, TrJembatan, TrTrayek, Telekomunikasi, SmpJalan, \
-    SmpSungai, Sanitasi, Cctv, Swalayan, BnbaKl, BnbaIstq, BnbaMhkt, BnbaTelb, BnbaTklak, BnbaWngsel, \
+    SmpSungai, Sanitasi, Cctv, Infralampu, Swalayan, BnbaKl, BnbaIstq, BnbaMhkt, BnbaTelb, BnbaTklak, BnbaWngsel, \
     BnbaPin, BnbaWngut, BnbaLwng, BnbaTwut, BnbaTwsel, BnbaCal, BnbaBmib, BnbaMhkb, BnbaSarUt, BnbaRanotana, \
     BnbaSaKobar, BnbaSario, BnbaSarTum, BnbaPaal2, BnbaKrgwr, BnbaPerkamil, BnbaDenlu, BnbaMalendeng, BnbaRanomuut
 from leaflet.admin import LeafletGeoAdmin
@@ -180,6 +180,9 @@ class SanitasiAdmin(LeafletGeoAdmin):
 class CctvAdmin(LeafletGeoAdmin):
     list_per_page = 10
 
+class InfralampuAdmin(LeafletGeoAdmin):
+    list_per_page = 10
+
 
 # admin.site.register(Incindences, IncidencesAdmin)
 admin.site.register(BnbaKl, BnbaKlAdmin)
@@ -222,5 +225,6 @@ admin.site.register(SmpSungai, SmpSungaiAdmin)
 admin.site.register(Sanitasi, SanitasiAdmin)
 admin.site.register(Cctv, CctvAdmin)
 admin.site.register(Swalayan, SwalayanAdmin)
+admin.site.register(Infralampu, InfralampuAdmin)
 admin.site.site_header = 'Big Data Studio Kota Manado'
 admin.site.site_title = 'Big Data Studio Kota Manado'

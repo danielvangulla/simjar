@@ -181,80 +181,53 @@ function getPathFoto(feature)
 // Global Layer Popup
 function getPopup(feature,arr)
 {
-	var path_foto = getPathFoto(feature);
-	popup 	= '';
-	style	= 'style="height : 170px; width : 100%;"';
+	var arrPopup = [];
+	arrPopup.push({label: "No. Rumah", 			value: feature.properties.no_rumah});
+	arrPopup.push({label: "TAHUN", 				value: arr.tahun});
+	arrPopup.push({label: "NIK", 				value: arr.nik});
+	arrPopup.push({label: "NOP ePajak", 		value: arr.nop});
+	arrPopup.push({label: "NOP Bidang", 		value: feature.properties.nop});
+	arrPopup.push({label: "NAMA", 				value: arr.nama});
+	arrPopup.push({label: "ALAMAT", 			value: arr.alamat});
+	arrPopup.push({label: "KELUHARAN", 			value: arr.nama_kelurahan});
+	arrPopup.push({label: "NAMA USAHA", 		value: arr.nama_usaha});
+	arrPopup.push({label: "ALAMAT USAHA", 		value: arr.alamat_usaha});
+	arrPopup.push({label: "TGL USAHA", 			value: arr.tgl_usaha});
+	arrPopup.push({label: "SITU", 				value: arr.situ});
+	arrPopup.push({label: "No.HP", 				value: arr.no_hp});
+	arrPopup.push({label: "EMAIL", 				value: arr.email});
+	arrPopup.push({label: "No.NPWPD (LAMA)",	value: arr.npwpd_lama});
+	arrPopup.push({label: "No.NPWPD", 			value: arr.no_npwpd});
+	arrPopup.push({label: "TGL PERMOHONAN", 	value: arr.tgl_permohonan});
+	arrPopup.push({label: "TGL KETETAPAN", 		value: arr.tanggal_ketetapan});
+	arrPopup.push({label: "TGL PEMBAYARAN", 	value: arr.tanggal_pembayaran});
+	arrPopup.push({label: "No.BUKTI LUNAS", 	value: arr.no_bukti_lunas});
+	arrPopup.push({label: "No.URUT", 			value: arr.no_urut});
+	arrPopup.push({label: "No.URUT ABT", 		value: arr.no_urut_abt});
+	arrPopup.push({label: "No.URUT KEBERSIHAN",	value: arr.no_urut_kebersihan});
+	arrPopup.push({label: "STATUS", 			value: arr.status});
+	arrPopup.push({label: "TOTAL KEBERSIHAN", 	value: formatRibuan(arr.total_kebersihan)});
+	arrPopup.push({label: "TOTAL REKLAME", 		value: formatRibuan(arr.total_reklame)});
+	arrPopup.push({label: "TOTAL AIR", 			value: formatRibuan(arr.total_air)});
+	arrPopup.push({label: "TOTAL", 				value: formatRibuan(arr.total)});
+	arrPopup.push({label: "KUBIK AIR", 			value: formatRibuan(arr.kubik_air)});
+	arrPopup.push({label: "BUKTI PAM", 			value: arr.bukti_pam});
+	arrPopup.push({label: "STATUS", 			value: arr.status});
+	arrPopup.push({label: "STATUS BAYAR", 		value: arr.status_kelunasan});
 
-	rowx	= "No. Rumah"; 			isix 	= feature.properties.no_rumah;
-	row0	= "TAHUN"; 				isi0 	= arr.tahun;
-	row1	= "NIK"; 				isi1 	= arr.nik;
-	row2	= "NOP ePajak"; 		isi2 	= arr.nop;
-	row2_1	= "NOP Bidang"; 		isi2_1	= feature.properties.nop;
-	row3	= "NAMA"; 				isi3	= arr.nama;
-	row4	= "ALAMAT"; 			isi4	= arr.alamat;
-	row4_1	= "KELUHARAN"; 			isi4_1	= arr.nama_kelurahan;
-	row5	= "NAMA USAHA"; 		isi5	= arr.nama_usaha;
-	row6	= "ALAMAT USAHA"; 		isi6	= arr.alamat_usaha;
-	row6_1	= "TGL USAHA"; 			isi6_1	= arr.tgl_usaha;
-	row6_2	= "SITU"; 				isi6_2	= arr.situ;
-	row7	= "No.HP"; 				isi7	= arr.no_hp;
-	row8	= "EMAIL"; 				isi8	= arr.email;
-	row9	= "No.NPWPD (LAMA)";	isi9	= arr.npwpd_lama;
-	row10	= "No.NPWPD"; 			isi10	= arr.no_npwpd;
-	row11	= "TGL PERMOHONAN"; 	isi11	= arr.tgl_permohonan;
-	row12	= "TGL KETETAPAN"; 		isi12	= arr.tanggal_ketetapan;
-	row13	= "TGL PEMBAYARAN"; 	isi13	= arr.tanggal_pembayaran;
-	row14	= "No.BUKTI LUNAS"; 	isi14	= arr.no_bukti_lunas;
-	row15	= "No.URUT"; 			isi15	= arr.no_urut;
-	row16	= "No.URUT ABT"; 		isi16	= arr.no_urut_abt;
-	row16	= "No.URUT KEBERSIHAN";	isi16	= arr.no_urut_kebersihan;
-	row17	= "STATUS";				isi17	= arr.status;
-	row18	= "TOTAL KEBERSIHAN";	isi18	= formatRibuan(arr.total_kebersihan);
-	row19	= "TOTAL REKLAME";		isi19	= formatRibuan(arr.total_reklame);
-	row20	= "TOTAL AIR";			isi20	= formatRibuan(arr.total_air);
-	row21	= "TOTAL";				isi21	= formatRibuan(arr.total);
-	row22	= "KUBIK AIR";			isi22	= formatRibuan(arr.kubik_air);
-	row23	= "BUKTI PAM";			isi23	= arr.bukti_pam;
-	row98	= "STATUS"; 			isi98	= arr.status;
-	row99	= "STATUS BAYAR"; 		isi99	= arr.status_kelunasan;
-
+	var popup 	= '';
 	popup	+= '<div class="" style="overflow-y:auto; overflow-x:hidden; height:60vh; width:100%;">';
 	popup	+= '<table class="table table-bordered">';
 	popup	+= '<tbody>';
-
 	popup	+= '<tr><td class="text-right" style="width:30%;" colspan="2"><a href="#" id="pop">';
-	popup	+= '<img id="imageresource" '+style+' src='+path_foto+'/></a></td></tr>';
-	popup	+= '<tr><td class="text-right" style="width:30%;">'+rowx+'</td><td class="text-left" style="width:70%;">'+isix+'</td></tr>';
-	popup	+= '<tr><td class="text-right" style="width:30%;">'+row0+'</td><td class="text-left" style="width:70%;">'+isi0+'</td></tr>';
-	popup	+= '<tr><td class="text-right" style="width:30%;">'+row1+'</td><td class="text-left" style="width:70%;">'+isi1+'</td></tr>';
-	popup	+= '<tr><td class="text-right" style="width:30%;">'+row2+'</td><td class="text-left" style="width:70%;">'+isi2+'</td></tr>';
-	popup	+= '<tr><td class="text-right" style="width:30%;">'+row2_1+'</td><td class="text-left" style="width:70%;">'+isi2_1+'</td></tr>';
-	popup	+= '<tr><td class="text-right" style="width:30%;">'+row3+'</td><td class="text-left" style="width:70%;">'+isi3+'</td></tr>';
-	popup	+= '<tr><td class="text-right" style="width:30%;">'+row4+'</td><td class="text-left" style="width:70%;">'+isi4+'</td></tr>';
-	popup	+= '<tr><td class="text-right" style="width:30%;">'+row4_1+'</td><td class="text-left" style="width:70%;">'+isi4_1+'</td></tr>';
-	popup	+= '<tr><td class="text-right" style="width:30%;">'+row5+'</td><td class="text-left" style="width:70%;">'+isi5+'</td></tr>';
-	popup	+= '<tr><td class="text-right" style="width:30%;">'+row6+'</td><td class="text-left" style="width:70%;">'+isi6+'</td></tr>';
-	popup	+= '<tr><td class="text-right" style="width:30%;">'+row6_1+'</td><td class="text-left" style="width:70%;">'+isi6_1+'</td></tr>';
-	popup	+= '<tr><td class="text-right" style="width:30%;">'+row6_2+'</td><td class="text-left" style="width:70%;">'+isi6_2+'</td></tr>';
-	popup	+= '<tr><td class="text-right" style="width:30%;">'+row7+'</td><td class="text-left" style="width:70%;">'+isi7+'</td></tr>';
-	popup	+= '<tr><td class="text-right" style="width:30%;">'+row8+'</td><td class="text-left" style="width:70%;">'+isi8+'</td></tr>';
-	popup	+= '<tr><td class="text-right" style="width:30%;">'+row9+'</td><td class="text-left" style="width:70%;">'+isi9+'</td></tr>';
-	popup	+= '<tr><td class="text-right" style="width:30%;">'+row10+'</td><td class="text-left" style="width:70%;">'+isi10+'</td></tr>';
-	popup	+= '<tr><td class="text-right" style="width:30%;">'+row11+'</td><td class="text-left" style="width:70%;">'+isi11+'</td></tr>';
-	popup	+= '<tr><td class="text-right" style="width:30%;">'+row12+'</td><td class="text-left" style="width:70%;">'+isi12+'</td></tr>';
-	popup	+= '<tr><td class="text-right" style="width:30%;">'+row13+'</td><td class="text-left" style="width:70%;">'+isi13+'</td></tr>';
-	popup	+= '<tr><td class="text-right" style="width:30%;">'+row14+'</td><td class="text-left" style="width:70%;">'+isi14+'</td></tr>';
-	popup	+= '<tr><td class="text-right" style="width:30%;">'+row15+'</td><td class="text-left" style="width:70%;">'+isi15+'</td></tr>';
-	popup	+= '<tr><td class="text-right" style="width:30%;">'+row16+'</td><td class="text-left" style="width:70%;">'+isi16+'</td></tr>';
-	popup	+= '<tr><td class="text-right" style="width:30%;">'+row17+'</td><td class="text-left" style="width:70%;">'+isi17+'</td></tr>';
-	popup	+= '<tr><td class="text-right" style="width:30%;">'+row18+'</td><td class="text-left" style="width:70%;">'+isi18+'</td></tr>';
-	popup	+= '<tr><td class="text-right" style="width:30%;">'+row19+'</td><td class="text-left" style="width:70%;">'+isi19+'</td></tr>';
-	popup	+= '<tr><td class="text-right" style="width:30%;">'+row20+'</td><td class="text-left" style="width:70%;">'+isi20+'</td></tr>';
-	popup	+= '<tr><td class="text-right" style="width:30%;">'+row21+'</td><td class="text-left" style="width:70%;">'+isi21+'</td></tr>';
-	popup	+= '<tr><td class="text-right" style="width:30%;">'+row22+'</td><td class="text-left" style="width:70%;">'+isi22+'</td></tr>';
-	popup	+= '<tr><td class="text-right" style="width:30%;">'+row23+'</td><td class="text-left" style="width:70%;">'+isi23+'</td></tr>';
-	popup	+= '<tr><td class="text-right" style="width:30%;">'+row98+'</td><td class="text-left" style="width:70%;">'+isi98+'</td></tr>';
-	popup	+= '<tr><td class="text-right" style="width:30%;">'+row99+'</td><td class="text-left" style="width:70%;">'+isi99+'</td></tr>';
+	
+	style	= 'style="height : 170px; width : 100%;"';
+	popup	+= '<img id="imageresource" '+style+' src='+getPathFoto(feature)+'/></a></td></tr>';
+	
+	for (var row of arrPopup){
+		popup	+= '<tr><td class="text-right" style="width:30%;">'+row.label+'</td>';
+		popup	+= '<td class="text-left" style="width:70%;">'+row.value+'</td></tr>';
+	}
 
 	popup	+= '</tbody>';
 	popup	+= '</table>';
@@ -285,28 +258,13 @@ $('#toolbar .hamburger').on('click', function() {
 });
 
 
-function getIconTelekomunikasi(feature)
-{
-	var myIcon = L.icon({
-		iconUrl: "http://"+ip[0]+"/dataGIS/images/frontend/towerValid.png",
-		iconSize: [50, 50],
-		iconAnchor: [25, 40],
-		popupAnchor:  [1, -40]
-	});
-	return myIcon;
-}
 
-function getIconSwalayan(feature)
+// Global Function Layer Bidang
+function _layer2(url)
 {
-	var myIcon = L.icon({
-		iconUrl: "http://"+ip[0]+"/dataGIS/images/frontend/" + feature.properties.minimarket + ".png",
-		iconSize: [50, 50],
-		iconAnchor: [25, 40],
-		popupAnchor:  [1, -40],
-		shadowUrl: "http://"+ip[0]+"/dataGIS/images/frontend/minimarketshadow.png",
-		shadowSize: [50, 50]
-	});
-	return myIcon;
+	return (new L.GeoJSON.AJAX(url,	{
+		style:_style, onEachFeature:_onEachFeature
+	})).on('click', _clickBidang);
 }
 
 // Global Style Bidang
@@ -315,7 +273,7 @@ function _style(feature)
 	return getDefaultColor(feature.properties.stat);
 }
 
-// Global Feature Bidang
+// Global eachFeature Bidang
 function _onEachFeature(feature,layer)
 {
 	var arr = findObjectByKey(_nopjson, 'nop', feature.properties.nop);
@@ -327,17 +285,81 @@ function _onEachFeature(feature,layer)
 	debug(feature.properties);
 }
 
-// Global Detail Bidang
+// Global Detail Click Bidang
 function _clickBidang(e)
 {
 	var arr = findObjectByKey(_nopjson, 'nop', e.layer.feature.properties.nop);
 	viewDetailBidang(e.layer.feature,arr);
 }
 
-// Global Function BNBA
-function _layer2(url)
+
+
+// Global Function Layer Point
+function _layer1(url)
 {
-	return (new L.GeoJSON.AJAX(url,
-	{style:_style, onEachFeature:_onEachFeature}))
-	.on('click', _clickBidang);
+	var _url = url.split("'");
+	_url = _url[0].split("/");
+	_url = _url[1].split("_");
+	
+	var jenis = _url[0];
+	return (new L.GeoJSON.AJAX(url, {
+			pointToLayer: function(feature, latlng) {
+                var myIcon = getIcon(feature, jenis);
+				return L.marker(latlng, {icon: myIcon});
+            },
+            onEachFeature:function(feature,layer){
+				if (jenis == "swalayan"){
+					layer.bindPopup(
+					   '<center>'+feature.properties.nama.toString()+'</center>'
+					);
+				}
+            }
+        })
+	);
+}
+
+// Icon marker
+function getIcon(feature, jenis)
+{
+	var _iconUrl = "http://"+ip[0]+"/dataGIS/images/frontend/";
+	var _shadowUrl = _iconUrl;
+	
+	switch (jenis)
+	{
+		case "telekomunikasi" : 
+			_iconUrl += "towerValid.png"; 
+			_shadowUrl += "";
+			break;
+			
+		case "swalayan" : 
+			_iconUrl += feature.properties.minimarket + ".png"; 
+			_shadowUrl += "minimarketshadow.png";
+			break;
+			
+		case "trlampu" : 
+			_iconUrl += "TrafficLight.png"; 
+			_shadowUrl += "TrafficLightShadow.png";
+			break;
+			
+		case "infralampu" : 
+			_iconUrl += "RoadLight" + feature.properties.keterangan + ".png"; 
+			_shadowUrl += "RoadLightShadow.png";
+			break;
+			
+		default :
+			_iconUrl += "default.png"; 
+			_shadowUrl += "RoadLightShadow.png";
+			break;
+			
+	}
+	
+	var myIcon = L.icon({
+		iconUrl: _iconUrl,
+		iconSize: [50, 50],
+		iconAnchor: [25, 40],
+		popupAnchor:  [1, -40],
+		shadowUrl: _shadowUrl,
+		shadowSize: [50, 50]
+	});
+	return myIcon;
 }

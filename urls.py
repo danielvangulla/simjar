@@ -1,7 +1,7 @@
 from django.conf.urls import url, include
 from django.urls import path
 from .views import HomePageView, lapangan_datasets, incidences_datasets, umum_datasets, trterminal_datasets, patchsulut_datasets, trlampu_datasets, trjembatan_datasets, trtrayek_datasets, telekomunikasi_datasets, smpjalan_datasets, \
-    smpsungai_datasets, sanitasi_datasets, cctv_datasets, swalayan_datasets, bnbakl_datasets, bnbaistq_datasets, bnbamhkt_datasets, bnbatelb_datasets, \
+    smpsungai_datasets, sanitasi_datasets, cctv_datasets, infralampu_datasets, swalayan_datasets, bnbakl_datasets, bnbaistq_datasets, bnbamhkt_datasets, bnbatelb_datasets, \
     bnbatklak_datasets, bnbawngsel_datasets, bnbapin_datasets, bnbawngut_datasets, bnbalwng_datasets, bnbatwut_datasets, \
     bnbatwsel_datasets, bnbacal_datasets, bnbabmib_datasets, bnbamhkb_datasets, bnbasarut_datasets, bnbaranotana_datasets, bnbasakobar_datasets, bnbasario_datasets, \
     bnbasartum_datasets, bnbakrgwr_datasets, bnbapaal2_datasets, bnbaperkamil_datasets, bnbadenlu_datasets, bnbamalendeng_datasets, bnbaranomuut_datasets
@@ -21,6 +21,7 @@ urlpatterns = [
     path('smpsungai_data/', smpsungai_datasets, name='smpsungai'),
     path('sanitasi_data/', sanitasi_datasets, name='sanitasi'),
     path('cctv_data/', cctv_datasets, name='cctv'),
+    path('infralampu_data/', infralampu_datasets, name='infralampu'),
     path('swalayan_data/', swalayan_datasets, name='swalayan'),
     path('bnbakl_data/', bnbakl_datasets, name='bnbakl'),
     path('bnbaistq_data/', bnbaistq_datasets, name='bnbaistq'),

@@ -7,7 +7,6 @@
     {% leaflet_css %}
     <meta charset="UTF-8">
     <title>Big Data Studio Kota Manado</title>
-    {% include "styleindex.html" %}
     <link rel="stylesheet" type="text/css" href="{% static 'custom/index.css' %}"> 
     <link rel="stylesheet" type="text/css" href="{% static 'bootstrap/bootstrap.min.css' %}"> 
     <link rel="stylesheet" type="text/css" href="{% static 'leafletlayercontrol/leaflet.groupedlayercontrol.min.css' %}">
@@ -35,40 +34,14 @@
     <script type="text/javascript" src="{% static 'liveupdate/leaflet-liveupdate.js' %}"></script>
     <script type="text/javascript" src="{% static 'leafletlayerpanel/leaflet-panel-layers.src.js' %}"></script>
     <script type="text/javascript" src="{% static 'leafletzoombar/L.Control.ZoomBar.js' %}"></script>
+    <script>L_PREFER_CANVAS = true;</script>
 	
 </head>
 <body>
 <marquee id="hd" style="font-size:30px; background:lightblue;">Big Data Studio Kota Manado</marquee>
 <img id="header" src="">
 
-<div id="toolbar">
-	<div class="hamburger">
-		<span>Board&nbsp;Info</span>
-	</div>
-	
-	<div id="bnba"></div>
-	
-	<div id="graph"></div>
-	
-	<div id="legend"></div>
-</div>
-
-<div class="modal fade" id="imagemodal" tabindex="-1" role="dialog" aria-labelledby="myModalLabel" aria-hidden="true">
-  <div class="modal-dialog">
-    <div class="modal-content">
-      <div class="modal-header">
-        <button type="button" class="close" data-dismiss="modal"><span aria-hidden="true">&times;</span><span class="sr-only">Close</span></button>
-        <h4 class="modal-title" id="myModalLabel">Image preview</h4>
-      </div>
-      <div class="modal-body">
-        <img src="" id="imagepreview" style="width: 400px; height: 264px;" >
-      </div>
-      <div class="modal-footer">
-        <button type="button" class="btn btn-default" data-dismiss="modal">Close</button>
-      </div>
-    </div>
-  </div>
-</div>
+{% include "toolbar.html" %}
 
 <script type="text/javascript" src="{% static 'custom/index.min.js' %}"></script>
 <script type="text/javascript">
@@ -140,16 +113,13 @@
 
         });
 
+		/*
         var datasets_trterminal = new L.GeoJSON.AJAX("{% url 'trterminal' %}",{
              onEachFeature:function(feature,layer){
                 layer.bindPopup(
                    '<center>'+feature.properties.nama_obyek.toString()+'</center>'
                 );
             }
-        });
-
-        var datasets_trlampu = new L.GeoJSON.AJAX("{% url 'trlampu' %}",{
-
         });
 
         var datasets_trjembatan = new L.GeoJSON.AJAX("{% url 'trjembatan' %}",{
@@ -179,7 +149,7 @@
                 );
             }
         });
-
+		
         var datasets_cctv = new L.GeoJSON.AJAX("{% url 'cctv' %}",{
              onEachFeature:function(feature,layer){
 
@@ -200,18 +170,7 @@
                 );
             }
         });
-		
-        var datasets_swalayan = new L.GeoJSON.AJAX("{% url 'swalayan' %}",{
-			pointToLayer: function(feature, latlng) {
-                var myIcon = getIconSwalayan(feature);
-				return L.marker(latlng, {icon: myIcon});
-            },
-            onEachFeature:function(feature,layer){
-                layer.bindPopup(
-                   '<center>'+feature.properties.nama.toString()+'</center>'
-                );
-            }
-        });
+		*/
 		
 
         var datasets_sanitasi = new L.GeoJSON.AJAX("{% url 'sanitasi' %}",{
@@ -297,7 +256,12 @@
 					{
 						active: false,
 						name: "Swalayan",
-						layer: datasets_swalayan
+						layer: _layer1("{% url 'swalayan' %}")
+					},
+                    	{
+						active: false,
+						name: "Lampu Jalan",
+						layer: _layer1("{% url 'infralampu' %}")
 					},
 				]
 			},
@@ -308,22 +272,22 @@
 					{
 						active: false,
 						name: "Terminal",
-						layer: datasets_trterminal
+						layer: _layer1("{% url 'trterminal' %}")
 					},
 					{
 						active: false,
 						name: "Lampu Lalu Lintas",
-						layer: datasets_trlampu
+						layer: _layer1("{% url 'trlampu' %}")
 					},
 					{
 						active: false,
 						name: "Jembatan",
-						layer: datasets_trjembatan
+						layer: _layer1("{% url 'trjembatan' %}")
 					},
 					{
 						active: false,
 						name: "Trayek",
-						layer: datasets_trtrayek
+						layer: _layer1("{% url 'trtrayek' %}")
 					},
 				]
 			},
@@ -334,12 +298,12 @@
 					{
 						active: false,
 						name: "CCTV",
-						layer: datasets_cctv
+						layer: _layer1("{% url 'cctv' %}")
 					},
 					{
 						active: false,
 						name: "BTS",
-						layer: datasets_telekomunikasi
+						layer: _layer1("{% url 'telekomunikasi' %}")
 					},
 				]
 			},
@@ -350,7 +314,7 @@
 					{
 						active: false,
 						name: "MCK, IPAL, TPSS",
-						layer: datasets_sanitasi
+						layer: _layer1("{% url 'sanitasi' %}")
 					},
 				]
 			},

@@ -565,7 +565,29 @@ class BnbaRanomuut(models.Model):
 
     class Meta:
         verbose_name = "Ranomuut"
+
 #############################BATAS BNBA##############################################################################
+class Infralampu(models.Model):
+    name = models.CharField(max_length=254, null=True)
+    descript = models.CharField(max_length=254, null=True)
+    type = models.CharField(max_length=254, null=True)
+    comment = models.CharField(max_length=254, null=True)
+    symbol = models.CharField(max_length=254, null=True)
+    elevation = models.FloatField(null=True)
+    date_time_field = models.CharField(max_length=50, null=True)
+    keterangan = models.CharField(max_length=8, null=True)
+    geom = models.MultiPointField(srid=32651, null=True)
+
+    def __str__(self):
+        return self.name
+
+    class Meta:
+        verbose_name_plural = "Infrastruktur Lampu Jalan"
+
+    class Meta:
+        verbose_name = "Infrastruktur Lampu Jalan"
+
+
 class Swalayan(models.Model):
     nama = models.CharField(max_length=50, null=True)
     keterangan = models.CharField(max_length=50, null=True)

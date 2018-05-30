@@ -1,7 +1,7 @@
 import os
 from django.contrib.gis.utils import LayerMapping
 from .models import Bloklapangan, Umum, PatchSulut, TrTerminal, TrLampu, TrJembatan, TrTrayek, Telekomunikasi, SmpJalan, \
-    SmpSungai, Sanitasi, Cctv, Swalayan, BnbaKl, BnbaIstq, BnbaMhkt, BnbaTelb, BnbaTklak, BnbaWngsel, BnbaPin, BnbaWngut, BnbaLwng, \
+    SmpSungai, Sanitasi, Cctv, Infralampu, Swalayan, BnbaKl, BnbaIstq, BnbaMhkt, BnbaTelb, BnbaTklak, BnbaWngsel, BnbaPin, BnbaWngut, BnbaLwng, \
     BnbaTwut, BnbaTwsel, BnbaCal, BnbaBmib, BnbaMhkb, BnbaSarUt, BnbaRanotana, BnbaSaKobar, BnbaSario, BnbaSarTum, BnbaPerkamil, BnbaKrgwr, \
     BnbaPaal2, BnbaMalendeng, BnbaDenlu, BnbaRanomuut
 
@@ -334,6 +334,20 @@ bnbaranomuut_mapping = {
 
 ############################################## Batas BNBA ########################################################
 
+# Auto-generated `LayerMapping` dictionary for Infralampu model
+infralampu_mapping = {
+    'name': 'Name',
+    'descript': 'Descript',
+    'type': 'Type',
+    'comment': 'Comment',
+    'symbol': 'Symbol',
+    'elevation': 'Elevation',
+    'date_time_field': 'Date_Time_',
+    'keterangan': 'keterangan',
+    'geom': 'MULTIPOINT25D',
+}
+
+
 # Auto-generated `LayerMapping` dictionary for Swalayan model
 swalayan_mapping = {
     'nama': 'nama',
@@ -557,6 +571,7 @@ smpsungai_shp = os.path.abspath(os.path.join(os.path.dirname(__file__),'data/geo
 sanitasi_shp = os.path.abspath(os.path.join(os.path.dirname(__file__),'data/geo/sanitasi_SHP/sanitasi1.shp'))
 cctv_shp = os.path.abspath(os.path.join(os.path.dirname(__file__),'data/cctv/CCTV.shp'))
 swalayan_shp = os.path.abspath(os.path.join(os.path.dirname(__file__),'data/infra/swalayan_51N.shp'))
+infralampu_shp = os.path.abspath(os.path.join(os.path.dirname(__file__),'data/geo/lampu_jalan_SHP/road_light_join.shp'))
 
 def run(verbose=True):
     lm = LayerMapping(Bloklapangan, bloklapangan_shp, bloklapangan_mapping, transform=False, encoding='iso-8859-1')
@@ -712,5 +727,9 @@ def runcctv(verbose=True):
 
 def runswalayan(verbose=True):
     lm = LayerMapping(Swalayan, swalayan_shp, swalayan_mapping, transform=False, encoding='iso-8859-1')
+    lm.save(strict=True, verbose=verbose)
+
+def runinfralampu(verbose=True):
+    lm = LayerMapping(Infralampu, infralampu_shp, infralampu_mapping, transform=False, encoding='iso-8859-1')
     lm.save(strict=True, verbose=verbose)
 
